@@ -1,14 +1,20 @@
 package com.example.cluster;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,12 +26,16 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView messagesRecyclerview;
     private static final int READ_SMS_PERMISSIONS_REQUEST = 1982;
+    private TextView mBalanceAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
+        mBalanceAmount = findViewById(R.id.balanceTextView);
         messagesRecyclerview = findViewById(R.id.message_list);
         messagesRecyclerview.setLayoutManager(new LinearLayoutManager(this));
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS)
@@ -42,7 +52,14 @@ public class MainActivity extends AppCompatActivity {
 
         MessageAdapter arrayAdapter = new MessageAdapter(messages);
         messagesRecyclerview.setAdapter(arrayAdapter);
+        getBalanceAmount();
+    }
 
+    private void getBalanceAmount() {
+        MessageLab messageLab = MessageLab.get(this);
+        Message message = messageLab.getLastMessage();
+        mBalanceAmount.setText(message.getBalance());
+        Toast.makeText(this, "Your Account Balance - " + message.getBalance(), Toast.LENGTH_SHORT).show();
     }
 
     private void getPermissionToReadSms() {
@@ -71,4 +88,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_information:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }
