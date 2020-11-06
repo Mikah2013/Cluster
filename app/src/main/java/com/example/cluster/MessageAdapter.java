@@ -1,5 +1,7 @@
 package com.example.cluster;
 
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +18,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     private List<Message> mMessages;
 
-
     public MessageAdapter(List<Message> messages) {
         mMessages = messages;
 
@@ -30,10 +31,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MessageAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MessageAdapter.ViewHolder holder, final int position) {
         final CardView cardView = holder.mCardView;
-        Message message = mMessages.get(position);
+        final Message message = mMessages.get(position);
         holder.bind(message);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(cardView.getContext(), MessageDetailActivity.class);
+                intent.putExtra(MessageDetailActivity.EXTRA_MSG_ID, message.getId());
+                cardView.getContext().startActivity(intent);
+
+            }
+        });
 
     }
 
@@ -49,12 +59,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         private TextView mTextViewAmount;
         private TextView mTextViewBalance;
         private TextView mTextViewDate;
-        private Message mMessage;
 
 
-        public ViewHolder(@NonNull View cardView) {
+        public ViewHolder(@NonNull CardView cardView) {
             super(cardView);
-            mCardView = cardView.findViewById(R.id.card_view);
+            mCardView = cardView;
             mTextViewAddress = cardView.findViewById(R.id.textViewAddress);
             mTextViewAmount = cardView.findViewById(R.id.textViewAmount);
             mTextViewBalance = cardView.findViewById(R.id.textViewBalance);
@@ -62,11 +71,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
 
         public void bind(Message message) {
-            mMessage = message;
-            mTextViewAddress.setText(mMessage.getAddress());
-            mTextViewAmount.setText(mMessage.getAmount());
-            mTextViewDate.setText(mMessage.getDate());
-            mTextViewBalance.setText(mMessage.getBalance());
+            mTextViewAddress.setText(message.getAddress());
+            mTextViewAmount.setText(message.getAmount());
+            mTextViewDate.setText(message.getDate());
+            mTextViewBalance.setText(message.getBalance());
 
         }
     }
