@@ -1,5 +1,7 @@
 package com.example.cluster;
 
+import java.util.List;
+
 public class Message {
     String mId;
     String address;
@@ -7,21 +9,27 @@ public class Message {
     String body;
     String date;
     String balance;
+    List<Integer> paidList;
+    List<Integer> sentList;
+    List<Integer> withdrawalList;
 
     public Message() {
     }
-
 
     public Message(String id) {
         this.mId = id;
     }
 
-    public Message(String id, String address, String amount, String body, String date, String balance) {
-        this.mId = id;
+    public Message(String mId, String address, String amount, String body, String date, String balance, List<Integer> paidList, List<Integer> sentList, List<Integer> withdrawalList) {
+        this.mId = mId;
         this.address = address;
+        this.amount = amount;
         this.body = body;
         this.date = date;
         this.balance = balance;
+        this.paidList = paidList;
+        this.sentList = sentList;
+        this.withdrawalList = withdrawalList;
     }
 
     public String getId() {
@@ -70,5 +78,29 @@ public class Message {
 
     public void setBalance(String balance) {
         this.balance = balance;
+    }
+
+    public List<Integer> getPaidList() {
+        return paidList;
+    }
+
+    public void setPaidList(List<Integer> paidList) {
+        this.paidList = paidList;
+    }
+
+    public List<Integer> getSentList() {
+        return sentList;
+    }
+
+    public void setSentList(List<Integer> sentList) {
+        this.sentList = sentList;
+    }
+
+    public List<Integer> getWithdrawalList() {
+        return withdrawalList;
+    }
+
+    public void setWithdrawalList(List<Integer> withdrawalList) {
+        this.withdrawalList = withdrawalList;
     }
 }
