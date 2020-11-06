@@ -32,12 +32,12 @@ public class MessageLab {
         MessageCursorWrapper smsInboxCursor = querySMSMessages(
                 "address = ?",
                 new String[] {"AirtelMoney"},
-                "_id DESC limit 20"
+                "_id DESC limit 10"
         );
         try {
             smsInboxCursor.moveToFirst();
             while (!smsInboxCursor.isAfterLast()) {
-                mMessages.add(smsInboxCursor.getMessage());
+                mMessages.add(smsInboxCursor.getMessages());
                 smsInboxCursor.moveToNext();
             }
         } finally {
@@ -56,7 +56,26 @@ public class MessageLab {
                 return null;
             }
             cursor.moveToFirst();
-            return cursor.getMessage();
+            return cursor.getSingleMessage();
+        } finally {
+            cursor.close();
+        }
+    }
+
+
+
+    public Message getLastMessage() {
+        MessageCursorWrapper cursor = querySMSMessages(
+                "address = ?",
+                new String[] {"AirtelMoney"},
+                "_id DESC limit 10"
+        );
+        try {
+            if (cursor.getCount() == 0) {
+                return null;
+            }
+            cursor.moveToFirst();
+            return cursor.getSingleMessage();
         } finally {
             cursor.close();
         }
